@@ -1,7 +1,7 @@
 import Input from './components/Input';
 import Button from './components/Button/';
 import { Container, Content, Row } from './styles'
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const App = () => {
   const [currentNumber, setCurrentNumber] = useState(0);
@@ -10,10 +10,17 @@ const App = () => {
 
   const [operation, setOperation] = useState();
 
+  const [error, setError] = useState('');
+
+  const handleClearError = () => {
+    setError('');
+  };
+
   const handleOnClear = () => {
     setCurrentNumber('0');
     setFirstNumber('0');
-    setOperation('')
+    setOperation('');
+    handleClearError();
   } 
 
   const handleAddNumber = (num) => {
@@ -66,6 +73,22 @@ const App = () => {
       setCurrentNumber(String(sum))
       setOperation('')
     }
+
+    let a = Number(firstNumber)
+    let b = Number(currentNumber)
+
+    if (b === 0) {
+      setError('Erro: Divisão por zero não é permitida.');
+      return;
+    }
+
+    const numA = parseFloat(a);
+    const numB = parseFloat(b);
+
+    if (Number.isNaN(numA) || Number.isNaN(numB)) {
+      setError('Erro: Valores de entrada inválidos.');
+      return;
+    }
   }
 
   const handleEquals = () => {
@@ -91,7 +114,7 @@ const App = () => {
   return (
     <Container className="App">
       <Content>
-        <Input value={currentNumber}/>
+        <Input value={currentNumber} error={error}/>
         <Row>
           <Button label="C" onClick={handleOnClear}/>
           <Button label="." onClick={() => handleAddNumber('.')}/>
